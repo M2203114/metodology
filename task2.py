@@ -16,6 +16,35 @@ def generate_progression():
     return progression
 
 
+def format_question(progression, hidden_index):
+    """Format the progression with hidden number."""
+    return ['..' if i == hidden_index else str(num) 
+            for i, num in enumerate(progression)]
+
+
+def check_answer(user_answer, correct_answer, name):
+    """Check if the user's answer is correct."""
+    if user_answer == correct_answer:
+        print("Correct!\n")
+        return True
+    print(f"'{user_answer}' is wrong answer ;(. "
+          f"Correct answer was '{correct_answer}'.")
+    print(f"Let's try again, {name}!")
+    return False
+
+
+def play_round(name):
+    """Play a single round of the game."""
+    progression = generate_progression()
+    hidden_index = random.randint(0, len(progression) - 1)
+    correct_answer = progression[hidden_index]
+    
+    question = format_question(progression, hidden_index)
+    print(f"Question: {' '.join(question)}")
+    user_answer = int(input("Your answer: "))
+    return check_answer(user_answer, correct_answer, name)
+
+
 def play_game():
     """Plays the Brain Games progression game."""
     print("Welcome to the Brain Games!")
@@ -27,32 +56,11 @@ def play_game():
     total_questions = 3
 
     for _ in range(total_questions):
-        progression = generate_progression()
-        hidden_index = random.randint(0, len(progression) - 1)
-        correct_answer = progression[hidden_index]
-
-        # Create question string with hidden number
-        question = []
-        for i, num in enumerate(progression):
-            if i == hidden_index:
-                question.append('..')
-            else:
-                question.append(str(num))
-
-        print(f"Question: {' '.join(question)}")
-        user_answer = int(input("Your answer: "))
-
-        if user_answer == correct_answer:
-            print("Correct!\n")
-            correct_answers += 1
-        else:
-            print(f"'{user_answer}' is wrong answer ;(. "
-                  f"Correct answer was '{correct_answer}'.")
-            print(f"Let's try again, {name}!")
+        if not play_round(name):
             return
+        correct_answers += 1
 
-    if correct_answers == total_questions:
-        print(f"Congratulations, {name}!")
+    print(f"Congratulations, {name}!")
 
 
 play_game()
