@@ -1,26 +1,22 @@
 import random
-from typing import List, Tuple
 
-from engine import run_game
-
-
-def generate_progression(start: int, step: int, length: int) -> List[int]:
-    return [start * (step**i) for i in range(length)]
+from games.engine import run_game
 
 
-def generate_round() -> Tuple[str, str]:
+def generate_round():
     length = random.randint(5, 10)
     start = random.randint(1, 10)
-    step = random.randint(2, 5)
+    step = random.randint(1, 5)
+    progression = [str(start * step ** i) for i in range(length)]
     hidden_index = random.randint(0, length - 1)
-
-    progression = generate_progression(start, step, length)
-    answer = str(progression[hidden_index])
+    answer = progression[hidden_index]
     progression[hidden_index] = ".."
-    question = " ".join(map(str, progression))
-
+    question = " ".join(progression)
     return question, answer
 
+def main():
+    rules = "What number is missing in the progression?"
+    run_game(rules, generate_round)
 
-def play() -> None:
-    run_game("What number is missing in the progression?", generate_round)
+if __name__ == "__main__":
+    main()
